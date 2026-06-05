@@ -24,7 +24,7 @@ export default function TodoApp() {
 
   const deleteTodo = (id) => {
     // Remove the todo whose id matches the one that was clicked.
-    setTodos(todos.filter((todo) => todo.id === id));
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (
