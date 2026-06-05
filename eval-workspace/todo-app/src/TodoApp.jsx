@@ -6,6 +6,7 @@ import {
   clearCompleted,
   activeCount,
   filterTodos,
+  hasCompleted,
 } from './todoLogic.js';
 
 export default function TodoApp() {
@@ -30,6 +31,7 @@ export default function TodoApp() {
     <main>
       <h1>Todos</h1>
       <p>{activeCount(todos)} active todos</p>
+      {hasCompleted(todos) && <p>You have completed todos</p>}
       <div>
         <button type="button" onClick={() => setFilter('all')}>
           All
