@@ -69,43 +69,52 @@ Capture the following while/after the agent works:
 
 ## Transcript summary
 
-_(Placeholder — condensed account of the agent's session: investigation, plan,
-key decisions, and how it handled errors.)_
+The agent inspected the repository files, read `src/TodoApp.jsx`, and located the
+delete handler. It edited `src/TodoApp.jsx`, ran `npm test` to confirm the fix,
+then committed and pushed the code change. No wrong turns or loops observed.
 
 ## Files changed
 
-_(Placeholder — list of files created, modified, or deleted.)_
+- `eval-workspace/todo-app/src/TodoApp.jsx`
 
 ## Diff summary
 
-_(Placeholder — what actually changed in the code, independent of what the agent
-claimed. Note scope and any unrequested edits.)_
+Changed the `deleteTodo` filter from keeping the clicked todo to excluding the
+clicked todo. The fix was scoped to the application code; no test files or
+unrelated files were touched.
 
 ## Post-fix test output
 
-_(Placeholder — paste the full `npm test` summary after the agent's changes.)_
+All 3 tests passed.
+
+```
+Test Files  1 passed (1)
+     Tests  3 passed (3)
+```
 
 ## Outcome
 
-_(Placeholder — one of: **success** / **partial** / **failure**.)_
+**Success**
 
 ## Human judgment
 
-_(Placeholder — reviewer's rationale, drawing on all evidence above.)_
+The agent correctly identified the delete handler, made the minimal fix, ran the
+full test suite, and did not modify tests or unrelated files.
 
 ## Failure class
 
-_(Placeholder — one or more categories from `../findings/failure-taxonomy.md`,
-or "none" for a clean success.)_
+None
 
 ## Severity
 
-_(Placeholder — trivial / minor / moderate / major / critical.)_
+None
 
 ## Decision
 
-_(Placeholder — accept / revise / re-run / discard, etc.)_
+Ship
 
 ## Notes
 
-_(Placeholder — anything else worth recording for future review.)_
+This was a simple localized bug fix. It is useful as a baseline success case.
+Future runs should include harder tasks with ambiguous requirements, multi-file
+changes, or test-recovery behavior.
