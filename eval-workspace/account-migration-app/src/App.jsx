@@ -1,16 +1,16 @@
 import Header from './components/Header.jsx';
-import UserList from './components/UserList.jsx';
-import UserSettings from './components/UserSettings.jsx';
-import { useUser } from './hooks/useUser.js';
+import AccountList from './components/AccountList.jsx';
+import AccountSettings from './components/AccountSettings.jsx';
+import { useAccount } from './hooks/useAccount.js';
 
 export default function App() {
-  const { users } = useUser([]);
+  const { accounts } = useAccount([]);
 
   return (
     <main>
       <Header title="Admin Console" />
-      <UserSettings name="this profile" />
-      <UserList users={users} />
+      <AccountSettings name="this profile" />
+      <AccountList accounts={accounts} />
     </main>
   );
 }

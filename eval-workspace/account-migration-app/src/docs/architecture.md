@@ -2,7 +2,7 @@
 
 This app is organized into layers, each in its own directory under `src/`.
 
-- **models/** — the domain model (currently the User entity) and its public
+- **models/** — the domain model (the Account entity) and its public
   entry point.
 - **api/** — the wire format and HTTP client. The wire format maps the in-memory
   `id` to the contract field `user_id`, and the client talks to `/api/users`.
@@ -15,6 +15,7 @@ This app is organized into layers, each in its own directory under `src/`.
 - **docs/** — these notes.
 - **fixtures/** — sample and historical data used by tests.
 
-The domain language ("User") flows through the model, hooks, and components. The
-contract-facing fields and paths (`user_id`, `/api/users`, `app.users.v1`) are
-deliberately decoupled from the domain language and stay stable across renames.
+The domain language ("Account") flows through the model, hooks, and components.
+The contract-facing fields and paths (`user_id`, `/api/users`, `app.users.v1`)
+are deliberately decoupled from the domain language and stay stable across
+renames.

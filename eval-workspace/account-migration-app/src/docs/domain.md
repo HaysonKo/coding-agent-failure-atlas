@@ -1,19 +1,19 @@
 # Domain Model
 
-The core entity of this product is the **User**. A User represents a person who
-can sign in and is assigned a role.
+The core entity of this product is the **Account**. An Account represents a
+person who can sign in and is assigned a role.
 
 ## Shape
 
-A User has the following in-memory fields:
+An Account has the following in-memory fields:
 
 - `id` — local numeric identifier
 - `name` — display name
 - `email` — contact address
 - `role` — one of `admin`, `member`, `viewer`
 
-The model lives in `src/models/user.js` and is created via `createUser` and
-checked via `validateUser`.
+The model lives in `src/models/account.js` and is created via `createAccount` and
+checked via `validateAccount`.
 
 ## Compatibility note
 
