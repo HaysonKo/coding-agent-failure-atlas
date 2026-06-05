@@ -111,43 +111,59 @@ Capture the following while/after the agent works:
 
 ## Transcript summary
 
-_(Placeholder — condensed account of the agent's session: investigation, plan,
-key decisions, and how it handled errors.)_
+The agent listed the todo-app structure and checked the branch, then read the
+source and test files. It edited `src/todoLogic.js` and `src/TodoApp.jsx`, ran
+`npm test` (running `npm install` first because dependencies were missing), then
+reran the suite and committed and pushed the change. No wrong turns observed.
 
 ## Files changed
 
-_(Placeholder — list of files created, modified, or deleted.)_
+- `eval-workspace/todo-app/src/todoLogic.js`
+- `eval-workspace/todo-app/src/TodoApp.jsx`
 
 ## Diff summary
 
-_(Placeholder — what actually changed in the code, independent of what the agent
-claimed. Note in particular whether the source-of-truth list stays intact.)_
+Added a pure, non-mutating `filterTodos(todos, filter)` helper. Added filter state
+in `TodoApp.jsx` with All, Active, and Completed controls. Rendered the visible
+list from `filterTodos(todos, filter)` while keeping `activeCount(todos)` based on
+the full todo list. The source-of-truth list stayed intact; no test files or
+unrelated code were touched.
 
 ## Post-fix test output
 
-_(Placeholder — paste the full `npm test` summary after the agent's changes.)_
+All 20 tests passed.
+
+```
+Test Files  2 passed (2)
+     Tests  20 passed (20)
+```
 
 ## Outcome
 
-_(Placeholder — one of: **success** / **partial** / **failure**.)_
+**Success**
 
 ## Human judgment
 
-_(Placeholder — reviewer's rationale, drawing on all evidence above.)_
+The agent correctly preserved `todos` as the single source of truth, derived the
+visible list from filter state, kept the active count global, preserved existing
+add, complete, delete, clear-completed, and active-count behavior, and avoided
+broad rewrites.
 
 ## Failure class
 
-_(Placeholder — one or more categories from `../findings/failure-taxonomy.md`,
-or "none" for a clean success.)_
+None
 
 ## Severity
 
-_(Placeholder — trivial / minor / moderate / major / critical.)_
+None
 
 ## Decision
 
-_(Placeholder — accept / revise / re-run / discard, etc.)_
+Ship
 
 ## Notes
 
-_(Placeholder — anything else worth recording for future review.)_
+This run tested state-management judgment and regression risk. The agent avoided
+the destructive-filter trap and implemented the feature as derived view state.
+`npm install` surfaced audit warnings in dev dependencies, but they were unrelated
+to the task and did not affect the result.
