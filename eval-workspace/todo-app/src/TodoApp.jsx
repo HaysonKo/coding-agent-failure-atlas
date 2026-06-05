@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   addTodo,
   toggleTodo,
@@ -9,11 +9,17 @@ import {
   hasCompleted,
   markAllComplete,
 } from './todoLogic.js';
+import { loadTodos, saveTodos } from './storage.js';
 
 export default function TodoApp() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => loadTodos());
   const [text, setText] = useState('');
   const [filter, setFilter] = useState('all');
+
+  // Persist after every change to the list (add, toggle, delete, clear, mark all).
+  useEffect(() => {
+    saveTodos(todos);
+  }, [todos]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

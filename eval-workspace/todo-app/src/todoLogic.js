@@ -3,8 +3,12 @@
 
 let nextId = 1;
 
+export function generateId() {
+  return nextId++;
+}
+
 export function createTodo(text) {
-  return { id: nextId++, text, completed: false };
+  return { id: generateId(), text, completed: false };
 }
 
 export function addTodo(todos, text) {
