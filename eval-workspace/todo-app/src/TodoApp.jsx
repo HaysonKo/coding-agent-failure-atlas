@@ -4,6 +4,7 @@ import {
   toggleTodo,
   deleteTodo,
   clearCompleted,
+  markAllComplete,
   activeCount,
   filterTodos,
   hasCompleted,
@@ -24,6 +25,7 @@ export default function TodoApp() {
   const handleToggle = (id) => setTodos(toggleTodo(todos, id));
   const handleDelete = (id) => setTodos(deleteTodo(todos, id));
   const handleClearCompleted = () => setTodos(clearCompleted(todos));
+  const handleMarkAllComplete = () => setTodos(markAllComplete(todos));
 
   const visibleTodos = filterTodos(todos, filter);
 
@@ -79,6 +81,9 @@ export default function TodoApp() {
           </li>
         ))}
       </ul>
+      <button type="button" onClick={handleMarkAllComplete}>
+        Mark all complete
+      </button>
       <button type="button" onClick={handleClearCompleted}>
         Clear completed
       </button>

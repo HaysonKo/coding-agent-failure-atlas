@@ -27,6 +27,12 @@ export function clearCompleted(todos) {
   return todos.filter((todo) => !todo.completed);
 }
 
+export function markAllComplete(todos) {
+  return todos.map((todo) =>
+    todo.completed ? todo : { ...todo, completed: true }
+  );
+}
+
 export function activeCount(todos) {
   return todos.filter((todo) => !todo.completed).length;
 }
