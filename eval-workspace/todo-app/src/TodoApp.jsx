@@ -5,11 +5,15 @@ import {
   deleteTodo,
   clearCompleted,
   activeCount,
+  filterTodos,
 } from './todoLogic.js';
+
+const FILTERS = ['All', 'Active', 'Completed'];
 
 export default function TodoApp() {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState('');
+  const [filter, setFilter] = useState('all');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,10 +26,27 @@ export default function TodoApp() {
   const handleDelete = (id) => setTodos(deleteTodo(todos, id));
   const handleClearCompleted = () => setTodos(clearCompleted(todos));
 
+  const visibleTodos = filterTodos(todos, filter);
+
   return (
     <main>
       <h1>Todos</h1>
       <p>{activeCount(todos)} active todos</p>
+      <div role="group" aria-label="Filter todos">
+        {FILTERS.map((label) => {
+          const value = label.toLowerCase();
+          return (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={filter === value}
+              onClick={() => setFilter(value)}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
       <form onSubmit={handleSubmit}>
         <input
           aria-label="New todo"
@@ -36,7 +57,7 @@ export default function TodoApp() {
         <button type="submit">Add</button>
       </form>
       <ul>
-        {todos.map((todo) => (
+        {visibleTodos.map((todo) => (
           <li key={todo.id}>
             <label>
               <input

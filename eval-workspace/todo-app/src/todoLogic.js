@@ -30,3 +30,16 @@ export function clearCompleted(todos) {
 export function activeCount(todos) {
   return todos.filter((todo) => !todo.completed).length;
 }
+
+// Returns a filtered view of the list without mutating the input.
+// `filter` is one of 'all', 'active', or 'completed'.
+export function filterTodos(todos, filter) {
+  switch (filter) {
+    case 'active':
+      return todos.filter((todo) => !todo.completed);
+    case 'completed':
+      return todos.filter((todo) => todo.completed);
+    default:
+      return todos;
+  }
+}
