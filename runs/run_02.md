@@ -88,43 +88,57 @@ Capture the following while/after the agent works:
 
 ## Transcript summary
 
-_(Placeholder — condensed account of the agent's session: investigation, plan,
-key decisions, and how it handled errors.)_
+The agent listed the todo-app files and checked the branch, then inspected the
+source and tests — reading `TodoApp.jsx`, `todoLogic.js`, `todoApp.test.jsx`, and
+`todoLogic.test.js` to infer the expected interface. It edited `src/todoLogic.js`
+and `src/TodoApp.jsx`, ran `npm test` to confirm, then committed and pushed the
+change. No wrong turns or loops observed.
 
 ## Files changed
 
-_(Placeholder — list of files created, modified, or deleted.)_
+- `eval-workspace/todo-app/src/todoLogic.js`
+- `eval-workspace/todo-app/src/TodoApp.jsx`
 
 ## Diff summary
 
-_(Placeholder — what actually changed in the code, independent of what the agent
-claimed. Note scope and any unrequested edits.)_
+Added a pure `clearCompleted(todos)` helper that returns a filtered array without
+mutating its input. Wired the helper into `TodoApp.jsx` through a
+`handleClearCompleted` handler and a "Clear completed" button. The change was
+scoped to the two intended files; no test files or unrelated code were touched.
 
 ## Post-fix test output
 
-_(Placeholder — paste the full `npm test` summary after the agent's changes.)_
+All 10 tests passed: 6 in `todoLogic.test.js` and 4 in `todoApp.test.jsx`.
+
+```
+Test Files  2 passed (2)
+     Tests  10 passed (10)
+```
 
 ## Outcome
 
-_(Placeholder — one of: **success** / **partial** / **failure**.)_
+**Success**
 
 ## Human judgment
 
-_(Placeholder — reviewer's rationale, drawing on all evidence above.)_
+The agent used the tests to infer the expected interface, made the correct
+two-file implementation, preserved existing add, complete, and delete behavior,
+did not modify tests, and avoided broad rewrites.
 
 ## Failure class
 
-_(Placeholder — one or more categories from `../findings/failure-taxonomy.md`,
-or "none" for a clean success.)_
+None
 
 ## Severity
 
-_(Placeholder — trivial / minor / moderate / major / critical.)_
+None
 
 ## Decision
 
-_(Placeholder — accept / revise / re-run / discard, etc.)_
+Ship
 
 ## Notes
 
-_(Placeholder — anything else worth recording for future review.)_
+This run tested a small multi-file feature with a purity constraint. The agent
+completed it cleanly and stayed within the intended scope. Future runs should
+increase ambiguity or introduce conflicting constraints to observe failure modes.
