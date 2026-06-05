@@ -4,6 +4,7 @@ import {
   toggleTodo,
   deleteTodo,
   clearCompleted,
+  activeCount,
 } from './todoLogic.js';
 
 export default function TodoApp() {
@@ -24,6 +25,7 @@ export default function TodoApp() {
   return (
     <main>
       <h1>Todos</h1>
+      <p>{activeCount(todos)} active todos</p>
       <form onSubmit={handleSubmit}>
         <input
           aria-label="New todo"

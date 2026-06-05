@@ -111,4 +111,18 @@ describe('TodoApp active count', () => {
 
     expect(screen.getByText('1 active todos')).toBeInTheDocument();
   });
+
+  it('includes completed todos in the active count', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    // Complete one of the two todos.
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+
+    expect(screen.getByText('2 active todos')).toBeInTheDocument();
+  });
 });
