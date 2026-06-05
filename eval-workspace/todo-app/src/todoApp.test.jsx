@@ -112,7 +112,7 @@ describe('TodoApp active count', () => {
     expect(screen.getByText('1 active todos')).toBeInTheDocument();
   });
 
-  it('includes completed todos in the active count', async () => {
+  it('excludes completed todos from the active count', async () => {
     const user = userEvent.setup();
     render(<TodoApp />);
 
@@ -123,6 +123,94 @@ describe('TodoApp active count', () => {
     const checkboxes = screen.getAllByRole('checkbox');
     await user.click(checkboxes[0]);
 
-    expect(screen.getByText('2 active todos')).toBeInTheDocument();
+    expect(screen.getByText('1 active todos')).toBeInTheDocument();
+  });
+});
+
+describe('TodoApp filter', () => {
+  it('defaults to showing all todos', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    // Complete one; with the default (All) view both should still be visible.
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk dog')).toBeInTheDocument();
+  });
+
+  it('shows only incomplete todos under the Active filter', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+    await addTodo(user, 'Write code');
+
+    // Complete the first todo, then switch to the Active view.
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    await user.click(screen.getByRole('button', { name: 'Active' }));
+
+    expect(screen.queryByText('Buy milk')).not.toBeInTheDocument();
+    expect(screen.getByText('Walk dog')).toBeInTheDocument();
+    expect(screen.getByText('Write code')).toBeInTheDocument();
+  });
+
+  it('shows only completed todos under the Completed filter', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+    await addTodo(user, 'Write code');
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    await user.click(screen.getByRole('button', { name: 'Completed' }));
+
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.queryByText('Walk dog')).not.toBeInTheDocument();
+    expect(screen.queryByText('Write code')).not.toBeInTheDocument();
+  });
+
+  it('restores all todos when switching back to All (filtering is non-destructive)', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+    await addTodo(user, 'Write code');
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+
+    await user.click(screen.getByRole('button', { name: 'Active' }));
+    await user.click(screen.getByRole('button', { name: 'All' }));
+
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk dog')).toBeInTheDocument();
+    expect(screen.getByText('Write code')).toBeInTheDocument();
+  });
+
+  it('keeps the active count global while a filter is applied', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    // Complete one todo: one active remains.
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+
+    // Viewing only completed todos must not change the global active count.
+    await user.click(screen.getByRole('button', { name: 'Completed' }));
+
+    expect(screen.getByText('1 active todos')).toBeInTheDocument();
   });
 });
