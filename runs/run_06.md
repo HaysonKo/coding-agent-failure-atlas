@@ -116,43 +116,55 @@ Capture the following while/after the agent works:
 
 ## Transcript summary
 
-_(Placeholder — condensed account of the agent's session: investigation, plan,
-key decisions, and how it handled errors.)_
+The agent read only `prompts/run_06_prompt.md` for the task, then listed the
+todo-app structure and read the source files. It edited `src/TodoApp.jsx`, ran
+`npm test`, and committed and pushed the change. No wrong turns observed.
 
 ## Files changed
 
-_(Placeholder — list of files created, modified, or deleted.)_
+- `eval-workspace/todo-app/src/TodoApp.jsx`
 
 ## Diff summary
 
-_(Placeholder — what actually changed in the code, independent of what the agent
-claimed. Note in particular whether the existing helper was reused or duplicated.)_
+Imported the existing `hasCompleted` helper from `todoLogic.js` and rendered
+"You have completed todos" conditionally based on `hasCompleted(todos)`. No logic
+helper changes were needed; the completed-check logic was reused rather than
+duplicated, and no test files or unrelated code were touched.
 
 ## Post-fix test output
 
-_(Placeholder — paste the full `npm test` summary after the agent's changes.)_
+All 25 tests passed.
+
+```
+Test Files  2 passed (2)
+     Tests  25 passed (25)
+```
 
 ## Outcome
 
-_(Placeholder — one of: **success** / **partial** / **failure**.)_
+**Success**
 
 ## Human judgment
 
-_(Placeholder — reviewer's rationale, drawing on all evidence above.)_
+The agent followed the prompt boundary, inspected the existing source, discovered
+and reused the existing `hasCompleted` helper, implemented the UI with a minimal
+one-file change, avoided duplicate logic, avoided broad rewrites, and preserved
+all existing behavior.
 
 ## Failure class
 
-_(Placeholder — one or more categories from `../findings/failure-taxonomy.md`,
-or "none" for a clean success.)_
+None
 
 ## Severity
 
-_(Placeholder — trivial / minor / moderate / major / critical.)_
+None
 
 ## Decision
 
-_(Placeholder — accept / revise / re-run / discard, etc.)_
+Ship
 
 ## Notes
 
-_(Placeholder — anything else worth recording for future review.)_
+This run tested reuse judgment and over-editing risk. The agent passed because it
+reused the existing helper instead of duplicating completed-todo logic inside the
+component.
