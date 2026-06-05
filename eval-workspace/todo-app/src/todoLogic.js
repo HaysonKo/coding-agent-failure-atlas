@@ -40,3 +40,9 @@ export function filterTodos(todos, filter) {
 export function hasCompleted(todos) {
   return todos.some((todo) => todo.completed);
 }
+
+export function markAllComplete(todos) {
+  return todos.map((todo) =>
+    todo.completed ? todo : { ...todo, completed: true }
+  );
+}
