@@ -30,3 +30,13 @@ export function clearCompleted(todos) {
 export function activeCount(todos) {
   return todos.filter((todo) => !todo.completed).length;
 }
+
+export function filterTodos(todos, filter) {
+  if (filter === 'active') return todos.filter((todo) => !todo.completed);
+  if (filter === 'completed') return todos.filter((todo) => todo.completed);
+  return todos;
+}
+
+export function hasCompleted(todos) {
+  return todos.some((todo) => todo.completed);
+}

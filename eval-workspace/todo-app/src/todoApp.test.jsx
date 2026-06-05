@@ -214,3 +214,61 @@ describe('TodoApp filter', () => {
     expect(screen.getByText('1 active todos')).toBeInTheDocument();
   });
 });
+
+describe('TodoApp completed-status message', () => {
+  it('does not show the message when no todos are completed', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+
+    expect(
+      screen.queryByText('You have completed todos')
+    ).not.toBeInTheDocument();
+  });
+
+  it('shows "You have completed todos" once a todo is completed', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    const checkbox = screen.getByRole('checkbox');
+    await user.click(checkbox);
+
+    expect(screen.getByText('You have completed todos')).toBeInTheDocument();
+  });
+
+  it('hides the message after the completed todos are cleared', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    expect(screen.getByText('You have completed todos')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /clear completed/i }));
+
+    expect(
+      screen.queryByText('You have completed todos')
+    ).not.toBeInTheDocument();
+  });
+
+  it('hides the message when the completed todo is deleted', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    const checkbox = screen.getByRole('checkbox');
+    await user.click(checkbox);
+    expect(screen.getByText('You have completed todos')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Delete Buy milk' }));
+
+    expect(
+      screen.queryByText('You have completed todos')
+    ).not.toBeInTheDocument();
+  });
+});

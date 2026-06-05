@@ -4,6 +4,7 @@ import {
   toggleTodo,
   deleteTodo,
   clearCompleted,
+  hasCompleted,
 } from './todoLogic.js';
 
 describe('todoLogic', () => {
@@ -49,5 +50,15 @@ describe('todoLogic', () => {
     clearCompleted(todos);
 
     expect(todos).toHaveLength(before);
+  });
+
+  it('reports whether any todo is completed', () => {
+    expect(hasCompleted([])).toBe(false);
+
+    let todos = addTodo([], 'a');
+    expect(hasCompleted(todos)).toBe(false);
+
+    todos = toggleTodo(todos, todos[0].id);
+    expect(hasCompleted(todos)).toBe(true);
   });
 });
