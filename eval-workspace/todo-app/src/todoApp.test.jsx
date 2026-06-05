@@ -272,3 +272,122 @@ describe('TodoApp completed-status message', () => {
     ).not.toBeInTheDocument();
   });
 });
+
+describe('TodoApp mark all complete', () => {
+  it('completes every todo and drives the active count to zero', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    await user.click(screen.getByRole('button', { name: 'Mark all complete' }));
+
+    expect(screen.getByText('0 active todos')).toBeInTheDocument();
+    expect(screen.getByText('You have completed todos')).toBeInTheDocument();
+
+    // Nothing was deleted; every visible checkbox is checked.
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk dog')).toBeInTheDocument();
+    screen
+      .getAllByRole('checkbox')
+      .forEach((checkbox) => expect(checkbox).toBeChecked());
+  });
+
+  it('completes todos hidden by the Active view', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+    await addTodo(user, 'Write code');
+
+    // Complete the first todo, then view only the active ones (the completed
+    // todo is now hidden from view but still in the list).
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    await user.click(screen.getByRole('button', { name: 'Active' }));
+
+    await user.click(screen.getByRole('button', { name: 'Mark all complete' }));
+
+    expect(screen.getByText('0 active todos')).toBeInTheDocument();
+
+    // Back on All, all three todos remain and are completed.
+    await user.click(screen.getByRole('button', { name: 'All' }));
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk dog')).toBeInTheDocument();
+    expect(screen.getByText('Write code')).toBeInTheDocument();
+    screen
+      .getAllByRole('checkbox')
+      .forEach((checkbox) => expect(checkbox).toBeChecked());
+  });
+
+  it('completes hidden active todos when used from the Completed view', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+    await addTodo(user, 'Write code');
+
+    // Complete one todo, then view only completed todos. Two active todos are
+    // now hidden from view but must still be affected by "Mark all complete".
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    await user.click(screen.getByRole('button', { name: 'Completed' }));
+
+    await user.click(screen.getByRole('button', { name: 'Mark all complete' }));
+
+    // Global active count reflects the full list, not just the visible subset.
+    expect(screen.getByText('0 active todos')).toBeInTheDocument();
+
+    // Back on All, every todo is still present and completed — none lost.
+    await user.click(screen.getByRole('button', { name: 'All' }));
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk dog')).toBeInTheDocument();
+    expect(screen.getByText('Write code')).toBeInTheDocument();
+    screen
+      .getAllByRole('checkbox')
+      .forEach((checkbox) => expect(checkbox).toBeChecked());
+  });
+
+  it('shows all todos completed across filters after marking all complete', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    await user.click(screen.getByRole('button', { name: 'Mark all complete' }));
+
+    // Active view now shows nothing.
+    await user.click(screen.getByRole('button', { name: 'Active' }));
+    expect(screen.queryByText('Buy milk')).not.toBeInTheDocument();
+    expect(screen.queryByText('Walk dog')).not.toBeInTheDocument();
+
+    // Completed view shows both.
+    await user.click(screen.getByRole('button', { name: 'Completed' }));
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk dog')).toBeInTheDocument();
+  });
+
+  it('clear completed removes all todos after marking all complete', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+    await addTodo(user, 'Write code');
+
+    await user.click(screen.getByRole('button', { name: 'Mark all complete' }));
+    await user.click(screen.getByRole('button', { name: /clear completed/i }));
+
+    expect(screen.getByText('0 active todos')).toBeInTheDocument();
+    expect(screen.queryByText('Buy milk')).not.toBeInTheDocument();
+    expect(screen.queryByText('Walk dog')).not.toBeInTheDocument();
+    expect(screen.queryByText('Write code')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('You have completed todos')
+    ).not.toBeInTheDocument();
+  });
+});
