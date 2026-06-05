@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { addTodo, toggleTodo, deleteTodo } from './todoLogic.js';
+import { addTodo, toggleTodo, deleteTodo, clearCompleted } from './todoLogic.js';
 
 export default function TodoApp() {
   const [todos, setTodos] = useState([]);
@@ -14,6 +14,7 @@ export default function TodoApp() {
 
   const handleToggle = (id) => setTodos(toggleTodo(todos, id));
   const handleDelete = (id) => setTodos(deleteTodo(todos, id));
+  const handleClearCompleted = () => setTodos(clearCompleted(todos));
 
   return (
     <main>
@@ -54,6 +55,9 @@ export default function TodoApp() {
           </li>
         ))}
       </ul>
+      <button type="button" onClick={handleClearCompleted}>
+        Clear completed
+      </button>
     </main>
   );
 }
