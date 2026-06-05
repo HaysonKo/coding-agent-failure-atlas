@@ -4,6 +4,7 @@ import {
   toggleTodo,
   deleteTodo,
   clearCompleted,
+  activeCount,
 } from './todoLogic.js';
 
 export default function TodoApp() {
@@ -60,6 +61,7 @@ export default function TodoApp() {
           </li>
         ))}
       </ul>
+      <p>{activeCount(todos)} active todos</p>
       <button type="button" onClick={handleClearCompleted}>
         Clear completed
       </button>

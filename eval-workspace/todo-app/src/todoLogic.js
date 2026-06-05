@@ -26,3 +26,7 @@ export function deleteTodo(todos, id) {
 export function clearCompleted(todos) {
   return todos.filter((todo) => !todo.completed);
 }
+
+export function activeCount(todos) {
+  return todos.filter((todo) => !todo.completed).length;
+}
