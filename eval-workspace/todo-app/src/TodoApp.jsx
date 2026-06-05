@@ -1,36 +1,24 @@
 import { useState } from 'react';
-
-let nextId = 1;
+import { addTodo, toggleTodo, deleteTodo } from './todoLogic.js';
 
 export default function TodoApp() {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState('');
 
-  const addTodo = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const trimmed = text.trim();
-    if (!trimmed) return;
-    setTodos([...todos, { id: nextId++, text: trimmed, completed: false }]);
+    if (!text.trim()) return;
+    setTodos(addTodo(todos, text));
     setText('');
   };
 
-  const toggleTodo = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
-  const deleteTodo = (id) => {
-    // Remove the todo whose id matches the one that was clicked.
-    setTodos(todos.filter((todo) => todo.id === id));
-  };
+  const handleToggle = (id) => setTodos(toggleTodo(todos, id));
+  const handleDelete = (id) => setTodos(deleteTodo(todos, id));
 
   return (
     <main>
       <h1>Todos</h1>
-      <form onSubmit={addTodo}>
+      <form onSubmit={handleSubmit}>
         <input
           aria-label="New todo"
           placeholder="What needs doing?"
@@ -46,7 +34,7 @@ export default function TodoApp() {
               <input
                 type="checkbox"
                 checked={todo.completed}
-                onChange={() => toggleTodo(todo.id)}
+                onChange={() => handleToggle(todo.id)}
               />
               <span
                 style={{
@@ -59,7 +47,7 @@ export default function TodoApp() {
             <button
               type="button"
               aria-label={`Delete ${todo.text}`}
-              onClick={() => deleteTodo(todo.id)}
+              onClick={() => handleDelete(todo.id)}
             >
               Delete
             </button>
