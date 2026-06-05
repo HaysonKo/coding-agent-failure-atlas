@@ -1,0 +1,6 @@
+{
+  "maxCommands": 25,
+  "maxFilesRead": 15,
+  "investigationBudgetMinutes": 15,
+  "notes": "Stay within these limits. Prefer targeted investigation over broad, repeated scanning. Re-running the same command repeatedly counts against the command budget."
+}
