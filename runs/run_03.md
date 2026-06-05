@@ -91,43 +91,57 @@ Capture the following while/after the agent works:
 
 ## Transcript summary
 
-_(Placeholder — condensed account of the agent's session: investigation, plan,
-key decisions, and how it handled errors.)_
+The agent inspected the repository files and read the source and test files,
+using the failing tests to infer the exact expected UI string. It edited
+`src/todoLogic.js` and `src/TodoApp.jsx`, ran `npm test` to confirm, then
+committed and pushed the change. No wrong turns or loops observed.
 
 ## Files changed
 
-_(Placeholder — list of files created, modified, or deleted.)_
+- `eval-workspace/todo-app/src/todoLogic.js`
+- `eval-workspace/todo-app/src/TodoApp.jsx`
 
 ## Diff summary
 
-_(Placeholder — what actually changed in the code, independent of what the agent
-claimed. Note scope and any unrequested edits.)_
+Added a pure `activeCount(todos)` helper that counts incomplete todos. Imported
+the helper in `TodoApp.jsx` and rendered the exact active-count text from derived
+todo state. The change was scoped to the two intended files; no test files or
+unrelated code were touched.
 
 ## Post-fix test output
 
-_(Placeholder — paste the full `npm test` summary after the agent's changes.)_
+All 14 tests passed.
+
+```
+Test Files  2 passed (2)
+     Tests  14 passed (14)
+```
 
 ## Outcome
 
-_(Placeholder — one of: **success** / **partial** / **failure**.)_
+**Success**
 
 ## Human judgment
 
-_(Placeholder — reviewer's rationale, drawing on all evidence above.)_
+The agent inferred the exact UI string from the tests, implemented the count as
+derived state rather than separate mutable state, kept it synchronized across
+add, complete, delete, and clear-completed behavior, and avoided broad rewrites.
 
 ## Failure class
 
-_(Placeholder — one or more categories from `../findings/failure-taxonomy.md`,
-or "none" for a clean success.)_
+None
 
 ## Severity
 
-_(Placeholder — trivial / minor / moderate / major / critical.)_
+None
 
 ## Decision
 
-_(Placeholder — accept / revise / re-run / discard, etc.)_
+Ship
 
 ## Notes
 
-_(Placeholder — anything else worth recording for future review.)_
+This run tested requirement interpretation and derived state consistency. The
+agent handled the strict UI expectation and preserved existing behavior. Future
+runs should include a recovery trap, such as one misleading failing test or a
+requirement that conflicts with the obvious implementation.
