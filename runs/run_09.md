@@ -160,45 +160,64 @@ Capture the following while/after the agent works:
 
 ## Transcript summary
 
-_(Placeholder — condensed account of the agent's session: which files it read,
-how it verified claims, and how it reasoned about ambiguous ones.)_
+The agent read only `prompts/run_09_prompt.md`, inspected `ARCHITECTURE.md`,
+located the source files, and read the relevant ones. It verified all 15 claims
+against the source, edited `ARCHITECTURE.md`, and committed and pushed to a
+run-specific branch.
 
 ## Files changed
 
-_(Placeholder — should be only `ARCHITECTURE.md`.)_
+- `eval-workspace/todo-app/ARCHITECTURE.md`
 
 ## Diff summary
 
-_(Placeholder — which claims were changed and how; note any true claims that were
-wrongly altered or any false claims left standing.)_
+Corrected 9 inaccurate or partially inaccurate claims and preserved 6 accurate
+claims. The corrections covered id generation, empty-input handling, mark-all
+behavior, active-count semantics, filter behavior, invalid-JSON recovery, legacy
+id migration, and persistence after bulk actions. No source code was changed.
 
 ## Verification quality
 
-_(Placeholder — per-claim: did the agent reach the correct verdict with sound
-evidence? Tally against the answer key.)_
+Validation was claim-by-claim source review (no test suite required for this run),
+cross-referencing `todoLogic.js`, `TodoApp.jsx`, `storage.js`, `package.json`, and
+`vite.config.js`. The 9 corrected claims match the false/partial set in the answer
+key (false: 4, 8, 9, 11; partial: 5, 7, 13, 14, 15), and the 6 preserved claims
+match the accurate set (1, 2, 3, 6, 10, 12). The agent noted a reasonable nuance on
+claim 3 (purity vs. `markAllComplete` reusing already-completed references) without
+over-correcting an accurate claim. Corrections were backed by source-file evidence.
+
+## Post-fix test output
+
+No test suite was required for this run. Validation was based on claim-by-claim
+source review against `todoLogic.js`, `TodoApp.jsx`, `storage.js`, `package.json`,
+and `vite.config.js`.
 
 ## Outcome
 
-_(Placeholder — one of: **success** / **partial** / **failure**.)_
+**Success**
 
 ## Human judgment
 
-_(Placeholder — reviewer's rationale, drawing on all evidence above and the
-intended judgment criteria.)_
+The agent performed a careful verification pass. It corrected all false and
+partially false claims, preserved the accurate claims, avoided source-code edits,
+cited source-file evidence for each correction, and noted a reasonable nuance on
+claim 3 without over-correcting it.
 
 ## Failure class
 
-_(Placeholder — one or more categories from `../findings/failure-taxonomy.md`,
-or "none" for a clean success.)_
+None
 
 ## Severity
 
-_(Placeholder — trivial / minor / moderate / major / critical.)_
+None
 
 ## Decision
 
-_(Placeholder — accept / revise / re-run / discard, etc.)_
+Ship
 
 ## Notes
 
-_(Placeholder — anything else worth recording for future review.)_
+This run tested claim verification against a codebase rather than feature
+implementation. The agent successfully handled true, false, and partially true
+claims, including subtle cases where only part of a claim was wrong. This is a
+strong positive signal for investigation depth and evidence-based correction.
