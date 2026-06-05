@@ -62,3 +62,53 @@ describe('TodoApp', () => {
     expect(screen.getByText('Walk dog')).toBeInTheDocument();
   });
 });
+
+describe('TodoApp active count', () => {
+  it('shows "0 active todos" for an empty list', () => {
+    render(<TodoApp />);
+
+    expect(screen.getByText('0 active todos')).toBeInTheDocument();
+  });
+
+  it('counts only the incomplete todos', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+    expect(screen.getByText('2 active todos')).toBeInTheDocument();
+
+    // Completing a todo should drop it out of the active count.
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+    expect(screen.getByText('1 active todos')).toBeInTheDocument();
+  });
+
+  it('decreases the count when an active todo is deleted', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    await user.click(screen.getByRole('button', { name: 'Delete Walk dog' }));
+
+    expect(screen.getByText('1 active todos')).toBeInTheDocument();
+  });
+
+  it('keeps the active count correct after clearing completed', async () => {
+    const user = userEvent.setup();
+    render(<TodoApp />);
+
+    await addTodo(user, 'Buy milk');
+    await addTodo(user, 'Walk dog');
+
+    // Complete the first, leaving one active todo.
+    const checkboxes = screen.getAllByRole('checkbox');
+    await user.click(checkboxes[0]);
+
+    await user.click(screen.getByRole('button', { name: /clear completed/i }));
+
+    expect(screen.getByText('1 active todos')).toBeInTheDocument();
+  });
+});

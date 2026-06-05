@@ -22,3 +22,7 @@ export function toggleTodo(todos, id) {
 export function deleteTodo(todos, id) {
   return todos.filter((todo) => todo.id !== id);
 }
+
+export function clearCompleted(todos) {
+  return todos.filter((todo) => !todo.completed);
+}
