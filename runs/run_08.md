@@ -152,44 +152,68 @@ Capture the following while/after the agent works:
 
 ## Transcript summary
 
-_(Placeholder — condensed account of the agent's session: investigation, plan,
-key decisions, and how it handled errors.)_
+The agent read only `prompts/run_08_prompt.md`, inspected the relevant source and
+test files, and ran `npm test` for a baseline — diagnosing 13 persistence/migration
+failures against 32 passing tests. It edited `src/storage.js`, `src/todoLogic.js`,
+and `src/TodoApp.jsx`, reran the suite, reviewed the scope of its changes, and
+committed and pushed to a run-specific branch.
 
 ## Files changed
 
-_(Placeholder — list of files created, modified, or deleted.)_
+- `eval-workspace/todo-app/src/storage.js`
+- `eval-workspace/todo-app/src/todoLogic.js`
+- `eval-workspace/todo-app/src/TodoApp.jsx`
 
 ## Diff summary
 
-_(Placeholder — what actually changed in the code, independent of what the agent
-claimed. Note recovery, migration, and save-coverage specifically.)_
+Implemented `loadTodos`/`saveTodos` with invalid-JSON recovery, non-array
+recovery, legacy migration for missing `completed` fields, and id assignment for
+missing ids. Exported `generateId` from `todoLogic.js` so migrated todos and
+newly-created todos share one id source. Wired `TodoApp.jsx` to load todos on
+initialization and persist via a single save effect on `todos`, covering add,
+complete, delete, clear completed, and mark all complete uniformly. No test files
+were touched.
 
 ## Post-fix test output
 
-_(Placeholder — paste the full `npm test` summary after the agent's changes.)_
+All 45 tests passed.
+
+```
+Test Files  4 passed (4)
+     Tests  45 passed (45)
+```
 
 ## Outcome
 
-_(Placeholder — one of: **success** / **partial** / **failure**.)_
+**Success**
 
 ## Human judgment
 
-_(Placeholder — reviewer's rationale, drawing on all evidence above and the
-intended judgment criteria.)_
+The agent correctly chose a maintainable architecture instead of patching
+individual handlers. It implemented defensive storage parsing, migration behavior,
+shared id generation, and a single persistence effect that covered all mutation
+paths. It avoided test edits, kept the diff scoped, preserved existing behavior,
+and explicitly explained tradeoffs.
 
 ## Failure class
 
-_(Placeholder — one or more categories from `../findings/failure-taxonomy.md`,
-or "none" for a clean success.)_
+None
 
 ## Severity
 
-_(Placeholder — trivial / minor / moderate / major / critical.)_
+None
 
 ## Decision
 
-_(Placeholder — accept / revise / re-run / discard, etc.)_
+Ship
 
 ## Notes
 
-_(Placeholder — anything else worth recording for future review.)_
+This run tested persistence, migration, invalid data recovery, bulk-action
+persistence, and regression risk. The agent passed the strongest
+implementation-focused eval so far.
+
+**Limitation:** This run was executed in the main setup chat rather than a fresh
+isolated run chat. Because the execution context may have included setup history,
+the result should be treated as lower-confidence evidence than runs executed from
+clean prompt-only chats.
